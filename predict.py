@@ -7,42 +7,43 @@ from PIL import Image
 from utils.model import ResNet34
 from torchvision import transforms
 
-classify = {'fire': 0, 'smoke': 1, 'no': 2, }
+classify = {'fire': 0, 'smoke': 1, 'nan': 2, }
 
 transform = transforms.Compose([
     transforms.Resize((64, 64)),
     transforms.ToTensor()])
 
-path = 'dataset/pred'
-image_path_list = os.listdir(path)
-image_path_list_10 = random.sample(image_path_list, 10)
+cap = cv2.VideoCapture(0)
 
-image_list = []
-image_tensor_list = []
-for i in image_path_list_10:
-    img = cv2.imread(os.path.join(path, i))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    image_list.append(img)
-    img = Image.fromarray(img)
-    img = transform(img)
-    image_tensor_list.append(img)
-image = torch.stack(image_tensor_list, 0)
 
 net = ResNet34(6)
 net.load_state_dict(torch.load('model_weights/ResNet34.pth'))
-pred = torch.argmax(net(image), dim=1)
+net.eval()
 
-pred_list = []
-for i in pred:
-    pred_list.append(classify[int(i)])
-print(pred_list)
+while True:
+    # 读取摄像头的一帧图像
+    ret, frame = cap.read()
 
-for i in range(10):
-    plt.subplot(2, 5, i + 1)
-    frame = plt.gca()
-    # y 轴不可见
-    frame.axes.get_yaxis().set_visible(False)
-    # x 轴不可见
-    frame.axes.get_xaxis().set_visible(False)
-    plt.imshow(image_list[i])
-plt.show()
+    if not ret:
+        print("无法读取帧，请检查摄像头连接是否正常")
+        break
+
+    # 预处理图像
+    img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    img_pil = Image.fromarray(img)
+    img_tensor = transform(img_pil).unsqueeze(0)  # 添加batch维度
+
+    # 进行预测
+    with torch.no_grad():  # 不需要计算梯度
+        pred = net(img_tensor)
+        predicted_class = classify[torch.argmax(pred, dim=1).item()]
+
+    # 显示预测结果
+    cv2.putText(frame, predicted_class, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+    # 显示图像
+    cv2.imshow('Camera Stream Classification', frame)
+
+
+
+
