@@ -8,7 +8,7 @@ from utils.model import ResNet34
 from torchvision import transforms
 
 classify = {'fire': 0, 'smoke': 1, 'nan': 2, }
-
+classify = {value: key for key, value in classify.items()}
 transform = transforms.Compose([
     transforms.Resize((64, 64)),
     transforms.ToTensor()])
@@ -43,7 +43,4 @@ while True:
 
     # 显示图像
     cv2.imshow('Camera Stream Classification', frame)
-
-
-
 
