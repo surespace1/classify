@@ -97,7 +97,7 @@ if __name__ == '__main__':
     weight_decay = 1e-4  # 权重衰退
     device = 'cuda' if torch.cuda.is_available() else 'cpu'  # 选择设备
 
-    classify = {'fire': 0, 'smoke': 1, 'no': 2, }
+    classify = {'fire': 0, 'smoke': 1, 'nan': 2, }
     train_iter, test_iter = load_data(batch_size, crop_size, classify)
 
     net = ResNet34(classes_num)  # 定义模型

@@ -17,8 +17,9 @@ transform = transforms.Compose([
 cap = cv2.VideoCapture(0)
 
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 net = ResNet34(3)
-net.load_state_dict(torch.load('./model_weights/ResNet34.pth',map_location='cpu'))
+net.load_state_dict(torch.load('./model_weights/ResNet34.pth',map_location=device))
 net.eval()
 
 fire_detected_time = 0  # 记录火灾检测的时间
@@ -54,5 +55,3 @@ while True:
     cv2.imshow('Camera Stream Classification', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
-

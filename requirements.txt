@@ -1,0 +1,7 @@
+numpy==1.25
+torch
+opencv-python
+matplotlib
+torchvision
+tqdm
+opencv-contrib-python
