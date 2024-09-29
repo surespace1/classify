@@ -90,7 +90,7 @@ if __name__ == '__main__':
     batch_size = 128  # 批量大小
     crop_size = 64  # 裁剪大小
     in_channels = 3  # 输入图像通道
-    classes_num = 6  # 输出标签类别
+    classes_num = 3  # 输出标签类别
     num_epochs = 100  # 总轮次
     auto_save = 10  # 自动保存的间隔轮次
     lr = 1e-3  # 学习率
