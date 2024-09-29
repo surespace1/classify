@@ -43,4 +43,6 @@ while True:
 
     # 显示图像
     cv2.imshow('Camera Stream Classification', frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):  # 按'q'键退出
+        break
 
