@@ -16,8 +16,8 @@ transform = transforms.Compose([
 cap = cv2.VideoCapture(0)
 
 
-net = ResNet34(6)
-net.load_state_dict(torch.load('model_weights/ResNet34.pth'))
+net = ResNet34(3)
+net.load_state_dict(torch.load('./model_weights/ResNet34.pth',map_location='cpu'))
 net.eval()
 
 while True:
